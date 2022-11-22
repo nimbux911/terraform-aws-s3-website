@@ -1,3 +1,7 @@
+locals {
+  custom_subdomain = var.custom_subdomain == "" ? var.domain_name : "${var.custom_subdomain}.${var.domain_name}"
+}
+
 #
 # S3 Website
 #
@@ -122,7 +126,7 @@ resource "aws_s3_bucket_policy" "website" {
 
 resource "aws_route53_record" "website" {
   zone_id = var.zone_id
-  name    = var.custom_subdomain
+  name    = local.custom_subdomain
   type    = "A"
 
   alias {
