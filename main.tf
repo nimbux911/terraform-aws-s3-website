@@ -1,6 +1,6 @@
 locals {
   custom_subdomain = var.custom_subdomain == "" ? var.domain_name : "${var.custom_subdomain}.${var.domain_name}"
-  aliases = var.aliases != [] ? [for alias in var.aliases: "${alias}.${var.domain_name}"] : []
+  aliases = var.aliases != [] ? [for alias in toset(var.aliases): "${alias}.${var.domain_name}"] : []
 }
 
 #
