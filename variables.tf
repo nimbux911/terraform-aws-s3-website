@@ -21,3 +21,28 @@ variable "environment" {
   default     = ""
   description = "Environment, e.g. 'prd', 'qa', 'dev'"
 }
+
+variable "allowed_methods" {
+  type     = list(string)
+  default  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+}
+
+variable "cached_methods" {
+  type     = list(string)
+  default = ["GET", "HEAD"]
+}
+
+variable "index_document" {
+  type    = string
+  default = "index.html"
+}
+
+variable "error_document" {
+  type    = string
+  default = "index.html"
+}
+
+variable "bucket_name" {
+  type        = string
+  default     = ""
+}

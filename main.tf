@@ -1,15 +1,8 @@
-locals {
-  zone_id                = data.terraform_remote_state.route53.outputs.zone_id
-  domain_name            = data.terraform_remote_state.route53.outputs.zone_name
-  custom_subdomain       = var.custom_subdomain == "" ? local.domain_name : "${var.custom_subdomain}.${data.terraform_remote_state.route53.outputs.zone_name}"
-  certificate_arn        = data.terraform_remote_state.acm.outputs.certificate_arn
-}
-
 #
 # S3 Website
 #
 resource "aws_s3_bucket" "website" {
-  bucket = "${var.environment}-static-${var.website_name}-website"
+  bucket = var.bucket_name
 }
 
 resource "aws_s3_bucket_public_access_block" "website" {
@@ -26,11 +19,11 @@ resource "aws_s3_bucket_website_configuration" "website" {
   bucket = aws_s3_bucket.website.bucket
 
   index_document {
-    suffix = "index.html"
+    suffix = var.index_document
   }
 
   error_document {
-    key = "index.html"
+    key = var.error_document
   }
 }
 
@@ -39,7 +32,7 @@ resource "aws_s3_bucket_website_configuration" "website" {
 #
 
 resource "aws_cloudfront_origin_access_identity" "default" {
-  comment = "Origin Access Identity for ${local.custom_subdomain} S3 website"
+  comment = "Origin Access Identity for ${var.website_name} S3 website"
 }
 
 resource "aws_cloudfront_distribution" "default" {
@@ -52,11 +45,11 @@ resource "aws_cloudfront_distribution" "default" {
     }
   }
 
-  aliases = [ local.custom_subdomain, local.domain_name ]
+  aliases = var.aliases == [] ? [ local.custom_subdomain ] : concat(var.aliases, [ local.custom_subdomain ])
 
   default_cache_behavior {
-    allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods   = ["GET", "HEAD"]
+    allowed_methods  = var.allowed_methods
+    cached_methods   = var.cached_methods
     target_origin_id = aws_s3_bucket.website.bucket
 
     forwarded_values {
@@ -83,7 +76,7 @@ resource "aws_cloudfront_distribution" "default" {
   default_root_object = "index.html"
 
   viewer_certificate {
-    acm_certificate_arn = local.certificate_arn
+    acm_certificate_arn = var.certificate_arn
     ssl_support_method  = "sni-only"
   }
 
@@ -128,8 +121,8 @@ resource "aws_s3_bucket_policy" "website" {
 #
 
 resource "aws_route53_record" "website" {
-  zone_id = local.zone_id
-  name    = local.custom_subdomain
+  zone_id = var.zone_id
+  name    = var.custom_subdomain
   type    = "A"
 
   alias {
@@ -137,16 +130,4 @@ resource "aws_route53_record" "website" {
     zone_id = aws_cloudfront_distribution.default.hosted_zone_id
     evaluate_target_health = false
   }
-}
-
-
-#
-# Parameter Store
-#
-
-resource "aws_ssm_parameter" "domain_name" {
-  count   = local.zone_id != "" ? 1 : 0
-  name  = "/${var.environment}/CloudFront_Website/${local.custom_subdomain}/domain_name"
-  type  = "SecureString"
-  value = aws_cloudfront_distribution.default.domain_name
 }
