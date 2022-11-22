@@ -1,5 +1,6 @@
 locals {
   custom_subdomain = var.custom_subdomain == "" ? var.domain_name : "${var.custom_subdomain}.${var.domain_name}"
+  aliases = var.aliases != [] ? [for alias in var.aliases: "${alias}.${var.domain_name}"] : []
 }
 
 #
@@ -49,7 +50,7 @@ resource "aws_cloudfront_distribution" "default" {
     }
   }
 
-  aliases = var.aliases == [] ? [ local.custom_subdomain ] : concat(var.aliases, [ local.custom_subdomain ])
+  aliases = var.aliases == [] ? [ local.custom_subdomain ] : concat(local.aliases, [ local.custom_subdomain ])
 
   default_cache_behavior {
     allowed_methods  = var.allowed_methods
@@ -138,7 +139,7 @@ resource "aws_route53_record" "website" {
 
 
 resource "aws_route53_record" "aliases" {
-  for_each = toset(var.aliases)
+  for_each = local.aliases
   zone_id = var.zone_id
   name    = each.value
   type    = "A"
