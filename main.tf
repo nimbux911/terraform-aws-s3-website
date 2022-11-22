@@ -50,7 +50,7 @@ resource "aws_cloudfront_distribution" "default" {
     }
   }
 
-  aliases = var.aliases == [] ? [ local.custom_subdomain ] : concat(local.aliases, toset([ local.custom_subdomain ]))
+  aliases = var.aliases == [] ? [ local.custom_subdomain ] : concat(tolist(local.aliases), [ local.custom_subdomain ])
 
   default_cache_behavior {
     allowed_methods  = var.allowed_methods
