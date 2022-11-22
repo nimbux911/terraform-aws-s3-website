@@ -46,3 +46,18 @@ variable "bucket_name" {
   type        = string
   default     = ""
 }
+
+variable "certificate_arn" {
+  type        = string
+  description = "AWS ACM Certificate arn"
+}
+
+variable "domain_name" {
+  type        = string
+  description = "Domain name"
+}
+
+variable "zone_id" {
+  type        = string
+  description = "AWS Route 53 Hosted Zone id"
+}
