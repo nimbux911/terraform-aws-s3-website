@@ -16,12 +16,6 @@ variable "aliases" {
   default     = []
 }
 
-variable "environment" {
-  type        = string
-  default     = ""
-  description = "Environment, e.g. 'prd', 'qa', 'dev'"
-}
-
 variable "allowed_methods" {
   type     = list(string)
   default  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
