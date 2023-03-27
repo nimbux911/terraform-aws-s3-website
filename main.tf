@@ -139,10 +139,10 @@ resource "aws_route53_record" "website" {
 
 
 resource "aws_route53_record" "aliases" {
-  for_each = local.aliases
-  zone_id = var.zone_id
-  name    = each.value
-  type    = "A"
+  for_each = var.create_alias_records ? local.aliases : []
+  zone_id  = var.zone_id
+  name     = each.value
+  type     = "A"
 
   alias {
     name    = aws_cloudfront_distribution.default.domain_name
