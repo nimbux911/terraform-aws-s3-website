@@ -28,7 +28,7 @@ module "s3_website" {
   zone_id              = "NIMBUX911"
   domain_name          = "nimbux911.com"
   custom_subdomain     = "awesome"
-  aliases              = ["tooawesome", "reallyawesome"]
+  aliases              = ["tooawesome.nimbux911.com", "reallyawesome.nimbux911.com"]
   create_alias_records = true
 } 
 
