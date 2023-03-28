@@ -49,7 +49,7 @@ module "s3_website" {
 | certificate\_arn | AWS ACM Certificate arn. | `string` | `null` | yes |
 | domain\_name | Domain name. | `string` | `null` | yes |
 | zone\_id | AWS Route 53 Hosted Zone id. | `string` | `null` | yes |
-| create\_alias\_records | Enable or not the creation of alias records | `bool` | `false` | no |
+| create\_alias\_records | Enable or not the creation of alias records | `bool` | `true` | no |
 
 
 ## Outputs

@@ -59,5 +59,5 @@ variable "zone_id" {
 variable "create_alias_records" {
   type        = bool
   description = "Put in true or false if you want to create alias records"
-  default     = false
+  default     = true
 }
