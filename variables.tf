@@ -55,3 +55,9 @@ variable "zone_id" {
   type        = string
   description = "AWS Route 53 Hosted Zone id"
 }
+
+variable "create_alias_records" {
+  type        = bool
+  description = "Put in true or false if you want to create alias records"
+  default     = true
+}

@@ -25,10 +25,11 @@ module "s3_website" {
   cached_methods  = ["GET", "HEAD"]
   certificate_arn = "arn:aws:acm:us-east-1:123456789:certificate/32fgh45d-a24c-430e-a9f0-7e4508d21b9c"
 
-  zone_id          = "NIMBUX911"
-  domain_name      = "nimbux911.com"
-  custom_subdomain = "awesome"
-  aliases          = ["tooawesome", "reallyawesome"]
+  zone_id              = "NIMBUX911"
+  domain_name          = "nimbux911.com"
+  custom_subdomain     = "awesome"
+  aliases              = ["tooawesome.nimbux911.com", "reallyawesome.nimbux911.com"]
+  create_alias_records = true
 } 
 
 ```
@@ -48,6 +49,7 @@ module "s3_website" {
 | certificate\_arn | AWS ACM Certificate arn. | `string` | `null` | yes |
 | domain\_name | Domain name. | `string` | `null` | yes |
 | zone\_id | AWS Route 53 Hosted Zone id. | `string` | `null` | yes |
+| create\_alias\_records | Enable or not the creation of alias records | `bool` | `true` | no |
 
 
 ## Outputs

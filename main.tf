@@ -1,6 +1,6 @@
 locals {
   custom_subdomain = var.custom_subdomain == "" ? var.domain_name : "${var.custom_subdomain}.${var.domain_name}"
-  aliases = var.aliases != [] ? toset([for alias in toset(var.aliases): "${alias}.${var.domain_name}"]) : []
+  aliases = var.aliases != [] ? toset([for alias in toset(var.aliases): "${alias}"]) : []
 }
 
 #
@@ -139,10 +139,10 @@ resource "aws_route53_record" "website" {
 
 
 resource "aws_route53_record" "aliases" {
-  for_each = local.aliases
-  zone_id = var.zone_id
-  name    = each.value
-  type    = "A"
+  for_each = var.create_alias_records ? local.aliases : []
+  zone_id  = var.zone_id
+  name     = each.value
+  type     = "A"
 
   alias {
     name    = aws_cloudfront_distribution.default.domain_name
