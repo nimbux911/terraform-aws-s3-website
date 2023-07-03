@@ -63,7 +63,7 @@ variable "create_alias_records" {
 }
 
 variable "minimum_protocol_version" {
-  type = string
+  type        = string
   description = "Protocol version"
-  default = "TLSv1"
+  default     = "TLSv1"
 }
