@@ -83,6 +83,7 @@ resource "aws_cloudfront_distribution" "default" {
   viewer_certificate {
     acm_certificate_arn = var.certificate_arn
     ssl_support_method  = "sni-only"
+    minimum_protocol_version = var.minimum_protocol_version
   }
 
   custom_error_response {
