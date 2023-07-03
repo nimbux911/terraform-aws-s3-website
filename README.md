@@ -25,12 +25,12 @@ module "s3_website" {
   cached_methods  = ["GET", "HEAD"]
   certificate_arn = "arn:aws:acm:us-east-1:123456789:certificate/32fgh45d-a24c-430e-a9f0-7e4508d21b9c"
 
-  zone_id              = "NIMBUX911"
-  domain_name          = "nimbux911.com"
-  custom_subdomain     = "awesome"
-  aliases              = ["tooawesome.nimbux911.com", "reallyawesome.nimbux911.com"]
-  create_alias_records = true
-  minimum_protocol_version = "TLSv1"
+  zone_id                   = "NIMBUX911"
+  domain_name               = "nimbux911.com"
+  custom_subdomain          = "awesome"
+  aliases                   = ["tooawesome.nimbux911.com", "reallyawesome.nimbux911.com"]
+  create_alias_records      = true
+  minimum_protocol_version  = "TLSv1"
 } 
 
 ```
