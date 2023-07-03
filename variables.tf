@@ -61,3 +61,9 @@ variable "create_alias_records" {
   description = "Put in true or false if you want to create alias records"
   default     = true
 }
+
+variable "minimum_protocol_version" {
+  type        = string
+  description = "Protocol version"
+  default     = "TLSv1"
+}
