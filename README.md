@@ -30,6 +30,7 @@ module "s3_website" {
   custom_subdomain     = "awesome"
   aliases              = ["tooawesome.nimbux911.com", "reallyawesome.nimbux911.com"]
   create_alias_records = true
+  minimum_protocol_version = "TLSv1"
 } 
 
 ```
@@ -50,6 +51,7 @@ module "s3_website" {
 | domain\_name | Domain name. | `string` | `null` | yes |
 | zone\_id | AWS Route 53 Hosted Zone id. | `string` | `null` | yes |
 | create\_alias\_records | Enable or not the creation of alias records | `bool` | `true` | no |
+| minimum\_protocol\_version | Minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `TLSv1` | no |
 
 
 ## Outputs
