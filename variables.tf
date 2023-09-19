@@ -67,3 +67,9 @@ variable "minimum_protocol_version" {
   description = "Protocol version"
   default     = "TLSv1"
 }
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "S3 bucket's tags"
+}
