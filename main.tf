@@ -1,6 +1,20 @@
 locals {
-  custom_subdomain = var.custom_subdomain == "" ? var.domain_name : "${var.custom_subdomain}.${var.domain_name}"
-  aliases = var.aliases != [] ? toset([for alias in toset(var.aliases): "${alias}"]) : []
+  custom_subdomain       = var.custom_subdomain == "" ? var.domain_name : "${var.custom_subdomain}.${var.domain_name}"
+  aliases                = var.aliases != [] ? toset([for alias in toset(var.aliases): "${alias}"]) : []
+  custom_error_responses = length(var.custom_error_responses) > 0 ? var.custom_error_responses : [
+    {
+      error_caching_min_ttl = 10
+      error_code            = 403
+      response_code         = 200
+      response_page_path    = "/index.html"
+    },
+    {
+      error_caching_min_ttl = 10
+      error_code            = 404
+      response_code         = 200
+      response_page_path    = "/index.html"
+    }
+  ]
 }
 
 #
@@ -87,20 +101,41 @@ resource "aws_cloudfront_distribution" "default" {
     minimum_protocol_version  = var.minimum_protocol_version
   }
 
-  custom_error_response {
-    error_caching_min_ttl = 10
-    error_code            = 403
-    response_code         = 200
-    response_page_path    = "/index.html"
+  dynamic "custom_error_response" {
+    for_each = local.custom_error_responses
+    content {
+      error_caching_min_ttl = custom_error_response.value.error_caching_min_ttl
+      error_code            = custom_error_response.value.error_code
+      response_code         = custom_error_response.value.response_code
+      response_page_path    = custom_error_response.value.response_page_path
+    }
   }
 
-  custom_error_response {
-    error_caching_min_ttl = 10
-    error_code            = 404
-    response_code         = 200
-    response_page_path    = "/index.html"
-  }
+  dynamic "ordered_cache_behavior" {
+    for_each = var.ordered_cache_behaviors
+    content {
+      allowed_methods        = ordered_cache_behavior.value.allowed_methods
+      cached_methods         = ordered_cache_behavior.value.cached_methods
+      path_pattern           = ordered_cache_behavior.value.path_pattern
+      target_origin_id       = aws_s3_bucket.website.bucket
+      viewer_protocol_policy = "redirect-to-https"
 
+      forwarded_values {
+        query_string = false
+          cookies {
+            forward = "none"
+          }
+      }
+      
+      dynamic "function_association" {
+        for_each = ordered_cache_behavior.value.function_associations
+        content {
+          event_type   = function_association.value.event_type
+          function_arn = function_association.value.function_arn
+        }
+      }
+    }
+  }
 }
 
 #

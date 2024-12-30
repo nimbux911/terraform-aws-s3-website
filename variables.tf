@@ -73,3 +73,27 @@ variable "tags" {
   default     = {}
   description = "S3 bucket's tags"
 }
+
+variable "custom_error_responses" {
+  default = []
+  type    = list(object({
+    error_caching_min_ttl = number
+    error_code            = number
+    response_code         = number
+    response_page_path    = string
+  }))
+  
+}
+
+variable "ordered_cache_behaviors" {
+  default = []
+  type    = list(object({
+    allowed_methods       = list(string)
+    cached_methods        = list(string)
+    path_pattern          = string
+    function_associations = list(object({
+      event_type   = string
+      function_arn = string
+    }))
+  }))
+}
