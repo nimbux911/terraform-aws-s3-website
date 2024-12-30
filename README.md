@@ -52,6 +52,8 @@ module "s3_website" {
 | zone\_id | AWS Route 53 Hosted Zone id. | `string` | `null` | yes |
 | create\_alias\_records | Enable or not the creation of alias records | `bool` | `true` | no |
 | minimum\_protocol\_version | Minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `TLSv1` | no |
+| custom\_error\_responses | Custom error responses for Cloudfront distribution | `list(object)` | [] | no |
+| ordered\_cache\_behaviors | Ordered cache behaviors for Cloudfront distribution | `list(object)` | [] | no |
 
 
 ## Outputs
