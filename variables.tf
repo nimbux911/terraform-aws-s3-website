@@ -98,22 +98,22 @@ variable "ordered_cache_behaviors" {
   }))
 }
 
-var "block_public_acls" {
+variable "block_public_acls" {
   type    = bool
   default = true
 }
 
-var "block_public_policy" {
+variable "block_public_policy" {
   type    = bool
   default = true
 }
 
-var "ignore_public_acls" {
+variable "ignore_public_acls" {
   type    = bool
   default = true
 }
 
-var "restrict_public_buckets" {
+variable "restrict_public_buckets" {
   type    = bool
   default = true
 }
