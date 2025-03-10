@@ -157,18 +157,17 @@ data "aws_iam_policy_document" "s3_policy" {
     effect    = "Allow"
     actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.website.arn}/*"]
-    sid       = "" 
+    sid       = ""
 
     principals {
       type        = "AWS"
       identifiers = [aws_cloudfront_origin_access_identity.default.iam_arn]
     }
-  }
 
-  statement {
-    effect = "Allow"
-    actions = ["s3:GetObject"]
-    resources = ["${aws_s3_bucket.website.arn}/*"] 
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
   }
 }
 
