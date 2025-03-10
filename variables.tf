@@ -97,3 +97,23 @@ variable "ordered_cache_behaviors" {
     }))
   }))
 }
+
+var "block_public_acls" {
+  type    = bool
+  default = true
+}
+
+var "block_public_policy" {
+  type    = bool
+  default = true
+}
+
+var "ignore_public_acls" {
+  type    = bool
+  default = true
+}
+
+var "restrict_public_buckets" {
+  type    = bool
+  default = true
+}
