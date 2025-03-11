@@ -63,6 +63,15 @@ resource "aws_cloudfront_distribution" "default" {
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
     }
+
+    custom_origin_config {
+       http_port                = var.custom_origin_configuration.http_port
+       https_port               = var.custom_origin_configuration.https_port
+       origin_keepalive_timeout = var.custom_origin_configuration.origin_keepalive_timeout
+       origin_protocol_policy   = var.custom_origin_configuration.origin_protocol_policy
+       origin_read_timeout      = var.custom_origin_configuration.origin_read_timeout
+       origin_ssl_protocols     = var.custom_origin_configuration.origin_ssl_protocols
+     }
   }
 
   aliases = var.aliases == [] ? [ local.custom_subdomain ] : concat(tolist(local.aliases), [ local.custom_subdomain ])

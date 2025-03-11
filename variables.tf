@@ -117,3 +117,16 @@ variable "restrict_public_buckets" {
   type    = bool
   default = true
 }
+
+variable "custom_origin_configuration" {
+  type = object({
+    http_port                = number
+    https_port               = number
+    origin_keepalive_timeout = number
+    origin_protocol_policy   = string
+    origin_read_timeout      = number
+    origin_ssl_protocols     = list(string)
+  })
+
+  default = null
+}
