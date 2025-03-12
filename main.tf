@@ -205,7 +205,7 @@ resource "aws_route53_record" "aliases" {
 # Lambda functions
 #
 
-resource "aws_lambda_function" "my_lambda" {
+resource "aws_lambda_function" "website" {
   count         = var.create_lambda ? 1 : 0
   function_name = var.lambda_name
   role          = var.lambda_role
