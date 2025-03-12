@@ -172,3 +172,13 @@ variable "lambda_runtime" {
   type    = string
   default = "null"
 }
+
+variable "lambda_timeout" {
+  type    = number
+  default = 3
+}
+
+variable "memory_size" {
+  type    = number
+  default = 128
+}

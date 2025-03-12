@@ -213,6 +213,8 @@ resource "aws_lambda_function" "website" {
   filename      = var.lambda_file
   handler       = var.lambda_handler
   runtime       = var.lambda_runtime
+  timeout       = var.lambda_timeout
+  memory_size   = var.lambda_memory_size
 
   tags          = var.tags
 
