@@ -178,7 +178,7 @@ variable "lambda_timeout" {
   default = 3
 }
 
-variable "memory_size" {
+variable "lambda_memory_size" {
   type    = number
   default = 128
 }
