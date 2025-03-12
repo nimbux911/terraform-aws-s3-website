@@ -200,3 +200,15 @@ resource "aws_route53_record" "aliases" {
     evaluate_target_health = false
   }
 }
+
+#
+# Lambda functions
+#
+
+resource "aws_lambda_function" "my_lambda" {
+  count         = var.create_lambda ? 1 : 0
+  function_name = var.lambda_name
+  role          = var.lambda_role
+}
+
+#"arn:aws:iam::<your-account-id>:role/iam-r-s3-web-static-prd"

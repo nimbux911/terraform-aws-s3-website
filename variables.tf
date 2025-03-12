@@ -130,3 +130,19 @@ variable "custom_origin_configuration" {
 
   default = null
 }
+
+variable "create_lambda" {
+  description = "Flag to create Lambda function (true/false)"
+  type        = bool
+  default     = false
+}
+
+variable "lambda_name" {
+  type    = string
+  default = ""
+}
+
+variable "lambda_role" {
+  type    = string
+  default = ""
+}
