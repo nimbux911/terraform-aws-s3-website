@@ -210,7 +210,9 @@ resource "aws_lambda_function" "website" {
   function_name = var.lambda_name
   role          = var.lambda_role
   filename      = var.lambda_file
-
+  handler       = "index.handler"
+  runtime       = "python3.8"
+  
 }
 
 #"arn:aws:iam::<your-account-id>:role/iam-r-s3-web-static-prd"
