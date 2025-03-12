@@ -152,3 +152,13 @@ variable "lambda_file" {
   default = ""
 }
 
+variable "lambda_env_vars" {
+  description = "Environment variables for the Lambda function"
+  type        = map(string)
+  default     = {}  
+}
+
+variable "lambda_description" {
+  type    = string
+  default = ""
+}

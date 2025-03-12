@@ -207,12 +207,17 @@ resource "aws_route53_record" "aliases" {
 
 resource "aws_lambda_function" "website" {
   count         = var.create_lambda ? 1 : 0
+  description   = var.lambda_description
   function_name = var.lambda_name
   role          = var.lambda_role
   filename      = var.lambda_file
   handler       = "index.handler"
   runtime       = "python3.8"
+
+  tags          = var.tags
+
+  environment {
+    variables = var.lambda_env_vars
+  }
   
 }
-
-#"arn:aws:iam::<your-account-id>:role/iam-r-s3-web-static-prd"
