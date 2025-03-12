@@ -162,3 +162,13 @@ variable "lambda_description" {
   type    = string
   default = ""
 }
+
+variable "lambda_handler" {
+  type    = string
+  default = "null"
+}
+
+variable "lambda_runtime" {
+  type    = string
+  default = "null"
+}

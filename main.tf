@@ -211,8 +211,8 @@ resource "aws_lambda_function" "website" {
   function_name = var.lambda_name
   role          = var.lambda_role
   filename      = var.lambda_file
-  handler       = "index.handler"
-  runtime       = "python3.8"
+  handler       = var.lambda_handler
+  runtime       = var.lambda_runtime
 
   tags          = var.tags
 
