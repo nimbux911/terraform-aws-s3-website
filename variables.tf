@@ -146,3 +146,9 @@ variable "lambda_role" {
   type    = string
   default = ""
 }
+
+variable "lambda_file" {
+  type    = string
+  default = ""
+}
+
