@@ -205,21 +205,19 @@ resource "aws_route53_record" "aliases" {
 # Lambda functions
 #
 
-resource "aws_lambda_function" "website" {
-  count         = var.create_lambda ? 1 : 0
-  description   = var.lambda_description
-  function_name = var.lambda_name
-  role          = var.lambda_role
-  filename      = var.lambda_file
-  handler       = var.lambda_handler
-  runtime       = var.lambda_runtime
-  timeout       = var.lambda_timeout
-  memory_size   = var.lambda_memory_size
+resource "aws_lambda_function" "this" {
+  count          = var.lambda_config.create_lambda ? 1 : 0
 
-  tags          = var.tags
+  function_name  = var.lambda_config.lambda_name
+  role           = var.lambda_config.lambda_role
+  filename       = var.lambda_config.lambda_file
+  description    = var.lambda_config.lambda_description
+  handler        = var.lambda_config.lambda_handler
+  runtime        = var.lambda_config.lambda_runtime
+  timeout        = var.lambda_config.lambda_timeout
+  memory_size    = var.lambda_config.lambda_memory_size
 
   environment {
-    variables = var.lambda_env_vars
+    variables = var.lambda_config.lambda_env_vars
   }
-  
 }

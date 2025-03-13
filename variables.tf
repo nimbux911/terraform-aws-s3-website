@@ -131,54 +131,19 @@ variable "custom_origin_configuration" {
   default = null
 }
 
-variable "create_lambda" {
-  description = "Flag to create Lambda function (true/false)"
-  type        = bool
-  default     = false
-}
-
-variable "lambda_name" {
-  type    = string
-  default = ""
-}
-
-variable "lambda_role" {
-  type    = string
-  default = ""
-}
-
-variable "lambda_file" {
-  type    = string
-  default = ""
-}
-
-variable "lambda_env_vars" {
-  description = "Environment variables for the Lambda function"
-  type        = map(string)
-  default     = {}  
-}
-
-variable "lambda_description" {
-  type    = string
-  default = ""
-}
-
-variable "lambda_handler" {
-  type    = string
-  default = "null"
-}
-
-variable "lambda_runtime" {
-  type    = string
-  default = "null"
-}
-
-variable "lambda_timeout" {
-  type    = number
-  default = 3
-}
-
-variable "lambda_memory_size" {
-  type    = number
-  default = 128
+variable "lambda_config" {
+  description = "Lambda function configuration"
+  type = object({
+    create_lambda      = bool
+    lambda_name        = string
+    lambda_role        = string
+    lambda_file        = string
+    lambda_description = string
+    lambda_env_vars    = map(string)
+    lambda_handler     = string
+    lambda_runtime     = string
+    lambda_timeout     = number
+    lambda_memory_size = number
+  })
+  default = null
 }
