@@ -1,6 +1,20 @@
 locals {
-  custom_subdomain = var.custom_subdomain == "" ? var.domain_name : "${var.custom_subdomain}.${var.domain_name}"
-  aliases = var.aliases != [] ? toset([for alias in toset(var.aliases): "${alias}"]) : []
+  custom_subdomain       = var.custom_subdomain == "" ? var.domain_name : "${var.custom_subdomain}.${var.domain_name}"
+  aliases                = var.aliases != [] ? toset([for alias in toset(var.aliases): "${alias}"]) : []
+  custom_error_responses = length(var.custom_error_responses) > 0 ? var.custom_error_responses : [
+    {
+      error_caching_min_ttl = 10
+      error_code            = 403
+      response_code         = 200
+      response_page_path    = "/index.html"
+    },
+    {
+      error_caching_min_ttl = 10
+      error_code            = 404
+      response_code         = 200
+      response_page_path    = "/index.html"
+    }
+  ]
 }
 
 #
@@ -14,10 +28,10 @@ resource "aws_s3_bucket" "website" {
 resource "aws_s3_bucket_public_access_block" "website" {
   bucket = aws_s3_bucket.website.id
 
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  block_public_acls       = var.block_public_acls
+  block_public_policy     = var.block_public_policy
+  ignore_public_acls      = var.ignore_public_acls
+  restrict_public_buckets = var.restrict_public_buckets
 }
 
 
@@ -49,6 +63,19 @@ resource "aws_cloudfront_distribution" "default" {
     s3_origin_config {
       origin_access_identity = aws_cloudfront_origin_access_identity.default.cloudfront_access_identity_path
     }
+
+    dynamic custom_origin_config {
+      for_each = var.custom_origin_configuration == null ? [] : [var.custom_origin_configuration]
+
+      content {
+            http_port                = var.custom_origin_configuration.http_port
+            https_port               = var.custom_origin_configuration.https_port
+            origin_keepalive_timeout = var.custom_origin_configuration.origin_keepalive_timeout
+            origin_protocol_policy   = var.custom_origin_configuration.origin_protocol_policy
+            origin_read_timeout      = var.custom_origin_configuration.origin_read_timeout
+            origin_ssl_protocols     = var.custom_origin_configuration.origin_ssl_protocols
+        }
+     }
   }
 
   aliases = var.aliases == [] ? [ local.custom_subdomain ] : concat(tolist(local.aliases), [ local.custom_subdomain ])
@@ -87,20 +114,41 @@ resource "aws_cloudfront_distribution" "default" {
     minimum_protocol_version  = var.minimum_protocol_version
   }
 
-  custom_error_response {
-    error_caching_min_ttl = 10
-    error_code            = 403
-    response_code         = 200
-    response_page_path    = "/index.html"
+  dynamic "custom_error_response" {
+    for_each = local.custom_error_responses
+    content {
+      error_caching_min_ttl = custom_error_response.value.error_caching_min_ttl
+      error_code            = custom_error_response.value.error_code
+      response_code         = custom_error_response.value.response_code
+      response_page_path    = custom_error_response.value.response_page_path
+    }
   }
 
-  custom_error_response {
-    error_caching_min_ttl = 10
-    error_code            = 404
-    response_code         = 200
-    response_page_path    = "/index.html"
-  }
+  dynamic "ordered_cache_behavior" {
+    for_each = var.ordered_cache_behaviors
+    content {
+      allowed_methods        = ordered_cache_behavior.value.allowed_methods
+      cached_methods         = ordered_cache_behavior.value.cached_methods
+      path_pattern           = ordered_cache_behavior.value.path_pattern
+      target_origin_id       = aws_s3_bucket.website.bucket
+      viewer_protocol_policy = "redirect-to-https"
 
+      forwarded_values {
+        query_string = false
+          cookies {
+            forward = "none"
+          }
+      }
+      
+      dynamic "function_association" {
+        for_each = ordered_cache_behavior.value.function_associations
+        content {
+          event_type   = function_association.value.event_type
+          function_arn = function_association.value.function_arn
+        }
+      }
+    }
+  }
 }
 
 #
@@ -151,4 +199,28 @@ resource "aws_route53_record" "aliases" {
     zone_id = aws_cloudfront_distribution.default.hosted_zone_id
     evaluate_target_health = false
   }
+}
+
+#
+# Lambda functions
+#
+
+resource "aws_lambda_function" "website" {
+  count          = var.lambda_config.create_lambda ? 1 : 0
+
+  function_name  = var.lambda_config.lambda_name
+  role           = var.lambda_config.lambda_role
+  filename       = var.lambda_config.lambda_file
+  description    = var.lambda_config.lambda_description
+  handler        = var.lambda_config.lambda_handler
+  runtime        = var.lambda_config.lambda_runtime
+  timeout        = var.lambda_config.lambda_timeout
+  memory_size    = var.lambda_config.lambda_memory_size
+  tags           = var.tags
+
+  environment {
+    variables = var.lambda_config.lambda_env_vars
+  }
+
+  
 }
