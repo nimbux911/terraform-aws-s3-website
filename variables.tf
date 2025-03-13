@@ -132,7 +132,7 @@ variable "custom_origin_configuration" {
 }
 
 variable "lambda_config" {
-  description = "Lambda function configuration"
+  description = "Configuration for the Lambda function"
   type = object({
     create_lambda      = bool
     lambda_name        = string
@@ -145,5 +145,16 @@ variable "lambda_config" {
     lambda_timeout     = number
     lambda_memory_size = number
   })
-  default = null
+  default = {
+    create_lambda      = false
+    lambda_name        = ""
+    lambda_role        = ""
+    lambda_file        = ""
+    lambda_description = ""
+    lambda_env_vars    = {}
+    lambda_handler     = ""
+    lambda_runtime     = ""
+    lambda_timeout     = 0
+    lambda_memory_size = 0
+  }
 }
