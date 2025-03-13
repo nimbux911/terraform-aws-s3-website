@@ -216,8 +216,11 @@ resource "aws_lambda_function" "website" {
   runtime        = var.lambda_config.lambda_runtime
   timeout        = var.lambda_config.lambda_timeout
   memory_size    = var.lambda_config.lambda_memory_size
+  tags           = var.tags
 
   environment {
     variables = var.lambda_config.lambda_env_vars
   }
+
+  
 }
