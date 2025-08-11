@@ -23,3 +23,6 @@ output "s3_bucket" {
   description = "Website S3 bucket"
 }
 
+output "s3_bucket_regional_domain_name" {
+  value = aws_s3_bucket.website.bucket_regional_domain_name
+}
