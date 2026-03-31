@@ -31,6 +31,25 @@ module "s3_website" {
   aliases                   = ["tooawesome.nimbux911.com", "reallyawesome.nimbux911.com"]
   create_alias_records      = true
   minimum_protocol_version  = "TLSv1"
+  default_cache_behavior_function_associations = [{
+    event_type   = "viewer-request"
+    function_arn = "arn:aws:cloudfront::123456789:function/example"
+  }]
+
+  origins = [{
+    domain_name              = "assets-bucket.s3.us-east-1.amazonaws.com"
+    origin_id                = "assets-bucket.s3.us-east-1.amazonaws.com"
+    origin_access_control_id = "EXAMPLE123"
+  }]
+
+  ordered_cache_behaviors = [{
+    path_pattern           = "/assets/*"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    target_origin_id       = "assets-bucket.s3.us-east-1.amazonaws.com"
+    cache_policy_id        = "658327ea-f89d-4fab-a63d-7e88639e58f6"
+    viewer_protocol_policy = "redirect-to-https"
+  }]
 } 
 
 ```
@@ -53,7 +72,9 @@ module "s3_website" {
 | create\_alias\_records | Enable or not the creation of alias records | `bool` | `true` | no |
 | minimum\_protocol\_version | Minimum version of the SSL protocol that you want CloudFront to use for HTTPS connections | `string` | `TLSv1` | no |
 | custom\_error\_responses | Custom error responses for Cloudfront distribution | `list(object)` | [] | no |
-| ordered\_cache\_behaviors | Ordered cache behaviors for Cloudfront distribution | `list(object)` | [] | no |
+| ordered\_cache\_behaviors | Ordered cache behaviors for CloudFront distribution. Accepts provider-supported optional attributes such as `target_origin_id`, `cache_policy_id`, `compress`, TTLs, `grpc_config`, and `function_associations`. | `any` | [] | no |
+| origins | Additional CloudFront origins to attach to the distribution. | `any` | [] | no |
+| default\_cache\_behavior\_function\_associations | CloudFront Function associations for the default cache behavior. | `list(object)` | `[]` | no |
 
 
 ## Outputs
@@ -65,4 +86,3 @@ module "s3_website" {
 | cf\_status | Current status of the distribution. |
 | cf\_domain\_name | Domain name corresponding to the distribution. |
 | s3\_bucket | Website S3 bucket. |
-

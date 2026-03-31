@@ -17,13 +17,22 @@ variable "aliases" {
 }
 
 variable "allowed_methods" {
-  type     = list(string)
-  default  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+  type    = list(string)
+  default = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
 }
 
 variable "cached_methods" {
-  type     = list(string)
+  type    = list(string)
   default = ["GET", "HEAD"]
+}
+
+variable "default_cache_behavior_function_associations" {
+  type = list(object({
+    event_type   = string
+    function_arn = string
+  }))
+  default     = []
+  description = "CloudFront Function associations for the default cache behavior."
 }
 
 variable "index_document" {
@@ -37,8 +46,8 @@ variable "error_document" {
 }
 
 variable "bucket_name" {
-  type        = string
-  default     = ""
+  type    = string
+  default = ""
 }
 
 variable "certificate_arn" {
@@ -76,26 +85,25 @@ variable "tags" {
 
 variable "custom_error_responses" {
   default = []
-  type    = list(object({
+  type = list(object({
     error_caching_min_ttl = number
     error_code            = number
     response_code         = number
     response_page_path    = string
   }))
-  
+
 }
 
 variable "ordered_cache_behaviors" {
-  default = []
-  type    = list(object({
-    allowed_methods       = list(string)
-    cached_methods        = list(string)
-    path_pattern          = string
-    function_associations = list(object({
-      event_type   = string
-      function_arn = string
-    }))
-  }))
+  default     = []
+  type        = any
+  description = "Ordered cache behaviors for the CloudFront distribution. Extra provider-supported attributes can be passed through when needed."
+}
+
+variable "origins" {
+  type        = any
+  default     = []
+  description = "Additional CloudFront origins to attach to the distribution."
 }
 
 variable "block_public_acls" {
@@ -157,4 +165,10 @@ variable "lambda_config" {
     lambda_timeout     = 0
     lambda_memory_size = 0
   }
+}
+
+variable "extra_oai_arns" {
+  type        = list(string)
+  default     = []
+  description = "Extra OAI ARNs to give other Cloudfront distributions access to the bucket created by the module."
 }
