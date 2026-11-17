@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-11-17
+
+- Add optional default_forwarded_headers to forward headers to the default origin and include them in the CloudFront cache key.
+- Add optional response_headers_policy_id for the default CloudFront cache behavior.
+- Preserve existing default cache behavior when the new inputs are not configured.
+
 ## [1.4.0] - 2026-03-31
 
 - Add support for additional CloudFront origins and more flexible ordered cache behavior attributes.

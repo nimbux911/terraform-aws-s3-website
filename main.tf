@@ -115,12 +115,14 @@ resource "aws_cloudfront_distribution" "default" {
   aliases = var.aliases == [] ? [local.custom_subdomain] : concat(tolist(local.aliases), [local.custom_subdomain])
 
   default_cache_behavior {
-    allowed_methods  = var.allowed_methods
-    cached_methods   = var.cached_methods
-    target_origin_id = aws_s3_bucket.website.bucket
+    allowed_methods            = var.allowed_methods
+    cached_methods             = var.cached_methods
+    target_origin_id           = aws_s3_bucket.website.bucket
+    response_headers_policy_id = var.response_headers_policy_id
 
     forwarded_values {
       query_string = true
+      headers      = var.default_forwarded_headers
       cookies {
         forward = "all"
       }
