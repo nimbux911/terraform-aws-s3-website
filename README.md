@@ -14,7 +14,7 @@ In case of not sending a custom subdomain, it will try to create an A record for
 ```hcl
 
 module "s3_website" {
-  source       = "github.com/nimbux911/terraform-aws-s3-website.git?ref=v1.0"
+  source       = "github.com/nimbux911/terraform-aws-s3-website.git?ref=v1.5.0"
 
   website_name = "my-awesome-website"
   bucket_name  = "nimbux911-static-awesome-website-bucket"
@@ -64,6 +64,8 @@ module "s3_website" {
 | aliases | A list of alternate domain names. | `list(string)` | `[]` | no |
 | allowed\_methods | List of allower methods.  | `list(string)` | `["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]` | no |
 | cached\_methods | List of cached methods. | `list(string)` | `["GET", "HEAD"]` | no |
+| default\_forwarded\_headers | Headers forwarded to the default origin and included in the CloudFront cache key. | `list(string)` | `null` | no |
+| response\_headers\_policy\_id | Response headers policy ID for the default cache behavior. | `string` | `null` | no |
 | index\_document | The name of the index document for the website. | `string` | `index.html` | no |
 | error\_document | The name of the error document for the website. | `string` | `index.html` | no |
 | certificate\_arn | AWS ACM Certificate arn. | `string` | `null` | yes |
