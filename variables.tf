@@ -26,6 +26,18 @@ variable "cached_methods" {
   default = ["GET", "HEAD"]
 }
 
+variable "default_forwarded_headers" {
+  type        = list(string)
+  default     = null
+  description = "Headers forwarded to the default origin and included in the CloudFront cache key."
+}
+
+variable "response_headers_policy_id" {
+  type        = string
+  default     = null
+  description = "Response headers policy ID for the default cache behavior."
+}
+
 variable "default_cache_behavior_function_associations" {
   type = list(object({
     event_type   = string
